@@ -17,8 +17,12 @@ FILES = [
     "efi_check.py", "compat.py",
 ]
 
+ENABLE_UPDATER = False  # Feature flag to enable/disable auto-updates
+
 
 def check_and_update(silent: bool = False) -> bool:
+    if not ENABLE_UPDATER:
+        return False
     src_dir = Path(__file__).parent.parent / "src"
     src_dir.mkdir(exist_ok=True)
 

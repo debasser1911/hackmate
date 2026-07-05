@@ -101,8 +101,8 @@ if DEMO_MODE:
 from compat import require_admin, IS_WINDOWS, get_usb_drives, format_usb, mount_usb, unmount_usb, get_mount_path, get_tmp_dir
 require_admin()
 
-from updater import check_and_update
-if check_and_update():
+from updater import check_and_update, ENABLE_UPDATER
+if ENABLE_UPDATER and check_and_update():
     os.execv(sys.executable, [sys.executable] + sys.argv)
 
 try:
@@ -2873,7 +2873,8 @@ class HackMate(App):
             self.push_screen(DemoScreen())
         else:
             self.push_screen(WelcomeScreen())
-        self.set_interval(3600, self._check_for_update)
+        if ENABLE_UPDATER:
+            self.set_interval(3600, self._check_for_update)
 
     @work(thread=True)
     def _check_for_update(self) -> None:

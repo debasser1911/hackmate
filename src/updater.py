@@ -15,6 +15,8 @@ API_URL      = f"https://api.github.com/repos/{REPO}/commits/{BRANCH}"
 COMPARE_URL  = f"https://api.github.com/repos/{REPO}/compare/{{base}}...{{head}}"
 VERSION_FILE = Path(__file__).parent / ".version"
 
+ENABLE_UPDATER = False  # Feature flag to enable/disable auto-updates
+
 FILES = [
     "hackmate.py",
     "hardware.py",
@@ -130,6 +132,8 @@ def _get_latest_exe_url() -> str | None:
 
 def check_update_silent() -> tuple[bool, str, list[str]]:
     """Check for updates without any prompts. Returns (has_update, remote_sha, changelog)."""
+    if not ENABLE_UPDATER:
+        return False, "", []
     remote_sha = _get_remote_sha()
     if not remote_sha:
         return False, "", []
@@ -141,6 +145,8 @@ def check_update_silent() -> tuple[bool, str, list[str]]:
 
 
 def check_and_update(silent: bool = False) -> bool:
+    if not ENABLE_UPDATER:
+        return False
     _ping_launch()
     print("Checking for updates...", end=" ", flush=True)
 
